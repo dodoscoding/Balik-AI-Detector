@@ -1,5 +1,7 @@
 # M1 prova ve nihai test ödevleri
 
+> Bu yöntem artık arkadaş kapısına, yani [yol haritasındaki](../ROADMAP.md#delivery-milestones) 3. kilometre taşına aittir. Balik önce kamuya açık arşiv metinleriyle geliştirilir ([ADR 0001](adr/0001-public-archive-corpus.md)).
+
 Koordinatör kayıtları ilk karşılaştırmadan önce tamamlar. Prova dört ayrı yazardan birer İngilizce akademik ödev bölümü içerir. Nihai test için bu dört kişiden farklı 3–4 yazardan birer izinli İngilizce akademik ödev bölümü ayrılır. Bu ikinci grup nihai test kümesinin başlangıcıdır.
 
 ## Yazardan alınacak bilgiler

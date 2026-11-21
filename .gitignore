@@ -1,0 +1,5 @@
+# Datasets stay out of git; see the data manifest
+/data/
+/AI Generated Essays Dataset.csv
+/archive (1).zip
+__pycache__/

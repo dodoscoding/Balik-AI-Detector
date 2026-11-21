@@ -1,5 +1,7 @@
 # M1 blind editing runbook
 
+> This procedure now belongs to the friends gate, milestone 3 in the [roadmap](../ROADMAP.md#delivery-milestones). Balik is developed on public-archive text first ([ADR 0001](adr/0001-public-archive-corpus.md)).
+
 This runbook is for the operator, who does not take part in the vote. The rehearsal coordinator receives the same ballot as the other reviewers. Keep the A/B key sealed until all peer and writer responses and any deciding votes have been recorded. See [issue #12](https://github.com/dodoscoding/Balik-AI-Detector/issues/12) and [the comparison criteria](../ROADMAP.md#blind-comparison-and-beta-criteria).
 
 ## Run the synthetic example
