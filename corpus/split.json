@@ -1,0 +1,5 @@
+{
+  "test_split_date": "2026-11-21",
+  "method": "Documents sharing an author code or a prompt code, directly or through a chain, form one group (union-find). Each source is split separately: whole groups, in seeded random order, go to test until test holds 20% of that source's documents. seed=20221130.",
+  "test_ids_sha256": "8f7f0d98f78a6920e8cc29ec95c79b2786d04aa03bcc1ae4a2acb3b1b01b9e5f"
+}
