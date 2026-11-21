@@ -49,7 +49,7 @@ def load_editor() -> Editor:
     from mlx_lm import load, stream_generate
     from mlx_lm.sample_utils import make_sampler
 
-    model, tokenizer = load(MODEL["id"], revision=MODEL["revision"])
+    model, tokenizer, *_ = load(MODEL["id"], revision=MODEL["revision"])
     sampler = make_sampler(temp=TEMPERATURE)
 
     def edit(instruction: str, brief: str) -> str:
