@@ -13,8 +13,9 @@ HF_HUB_DISABLE_TELEMETRY=1 uvx --python 3.12 --from huggingface-hub hf download 
   mlx-community/Qwen2.5-1.5B-Instruct-4bit \
   --revision 8b403126fc14f14cfc99bb4cfa72ecbc129ea677
 mkdir -p -m 700 "$HOME/.local/share/balik-evaluation"
+balik_run="$HOME/.local/share/balik-evaluation/example-$(date +%Y%m%d-%H%M%S)"
 uv run --script scripts/blind_edits.py examples/academic-brief.json \
-  "$HOME/.local/share/balik-evaluation/example-01"
+  "$balik_run" && printf '%s\n' "$balik_run/ballot.txt"
 ```
 
 Before sharing any `ballot.txt`, read both anonymous versions. Each must contain only draft text, with no editor labels, model identity, run details, or detector scores. Withhold the ballot if any of those appear. The ballot contains the assignment, writing goal, tone, original, both anonymous edits, and a question for the reviewer.
@@ -35,3 +36,9 @@ Read the original and each version against these reference points. They are for 
 | Quantities | `18 students`, `the same two questions`, `one stop`, and `a single evening` |
 | Degree of certainty | `may make the evening bus easier to use` |
 | Voice and restraint | `I kept that boundary visible because the quietest answers mattered too.` |
+
+## Verified synthetic run
+
+On 21 November 2026, the two edits of the 124-word draft took 2.669 seconds including model loading from the local cache. The service fee was USD 0. Existing hardware and electricity costs were excluded.
+
+Both edits fixed the subject–verb agreement error and preserved the checks above. A second offline run reproduced both candidate texts byte for byte. The reviewed ballot contained the two anonymous versions, with the key and run details kept in the operator record. This evidence covers one synthetic English academic draft.
