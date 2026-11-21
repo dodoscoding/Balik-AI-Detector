@@ -17,7 +17,9 @@ uv run --script scripts/blind_edits.py examples/academic-brief.json \
   "$HOME/.local/share/balik-evaluation/example-01"
 ```
 
-Share only `ballot.md`. It contains the assignment, writing goal, tone, original, both anonymous edits, and a question for the reviewer. The run directory and `private.json` stay with the operator. The private record contains both full instructions, their shared input, the pinned model revision, runtime versions, settings, A/B key, run date, per-edit and total elapsed time, original word count, and service fee. Elapsed time includes model loading and generation. The service fee is USD 0 and excludes hardware, electricity, and setup time.
+Before sharing any `ballot.txt`, read both anonymous versions. Each must contain only draft text, with no editor labels, model identity, run details, or detector scores. Withhold the ballot if any of those appear. The ballot contains the assignment, writing goal, tone, original, both anonymous edits, and a question for the reviewer.
+
+Share only `ballot.txt` once it passes that check. The run directory and `private.json` stay with the operator. The private record contains both full instructions, their shared input, the pinned model revision, runtime versions, settings, A/B key, run date, per-edit and total elapsed time, original word count, and service fee. Elapsed time includes model loading and generation. The service fee is USD 0 and excludes hardware, electricity, and setup time.
 
 For a permissioned rehearsal draft, create the same four-field JSON brief outside the repository. Keep any passage marked by the writer in a separate record. Use a new directory named with the coded draft ID. A fresh run randomly assigns the labels again. Archive the exact ballot and private record from the same run together.
 

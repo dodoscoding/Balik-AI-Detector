@@ -54,9 +54,9 @@ class BlindEditsTest(unittest.TestCase):
         self.assertEqual(self.output.stat().st_mode & 0o777, 0o700)
         self.assertEqual(private_path.stat().st_mode & 0o777, 0o600)
 
-        ballot = (self.output / "ballot.md").read_text(encoding="utf-8")
+        ballot = (self.output / "ballot.txt").read_text(encoding="utf-8")
         for label, method in record["mapping"].items():
-            self.assertIn(f"## Version {label}\n\n> {candidates[method]}\n", ballot)
+            self.assertIn(f"Version {label}\n\n{candidates[method]}\n", ballot)
         for value in self.brief.values():
             self.assertIn(value, ballot)
         self.assertIn("A, B, or Equally good", ballot)
@@ -85,4 +85,18 @@ class BlindEditsTest(unittest.TestCase):
 
         self.assertFalse(self.output.exists())
         main(self.args, editor=lambda _instruction, _brief: self.brief["draft"])
-        self.assertTrue((self.output / "ballot.md").is_file())
+        self.assertTrue((self.output / "ballot.txt").is_file())
+
+    def test_rejects_output_in_the_repository_under_another_case_spelling(self):
+        root = Path(__file__).resolve().parents[1]
+        alias = root.with_name(root.name.swapcase())
+        if not alias.exists() or not root.samefile(alias):
+            self.skipTest("Requires a case-insensitive filesystem")
+
+        def edit(instruction: str, brief: str) -> str:
+            self.fail("A run inside the repository reached the editor")
+
+        with redirect_stderr(StringIO()), self.assertRaises(SystemExit) as error:
+            main([str(self.source), str(alias / "private-run")], editor=edit)
+
+        self.assertEqual(error.exception.code, 2)

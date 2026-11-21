@@ -85,12 +85,10 @@ def ballot_text(brief: dict[str, str], blinded: dict[str, str]) -> str:
         "Version A": blinded["A"],
         "Version B": blinded["B"],
     }
-    ballot = ["# Editing comparison"]
-    for title, value in sections.items():
-        quoted = "\n".join(f"> {line}" if line else ">" for line in value.splitlines())
-        ballot.append(f"## {title}\n\n{quoted}")
+    ballot = ["Editing comparison"]
+    ballot.extend(f"{title}\n\n{value}" for title, value in sections.items())
     ballot.append(
-        "## Your vote\n\nCompare clarity, naturalness, and fit to the brief. "
+        "Your vote\n\nCompare clarity, naturalness, and fit to the brief. "
         "Choose A, B, or Equally good and give a one-sentence reason."
     )
     return "\n\n".join(ballot) + "\n"
@@ -108,12 +106,13 @@ def main(argv: Sequence[str] | None = None, *, editor: Editor | None = None) -> 
     )
     args = parser.parse_args(argv)
     output: Path = args.output.resolve()
-    if output.is_relative_to(Path(__file__).resolve().parents[1]):
-        parser.error("Use an output directory outside the repository.")
     if not output.parent.is_dir() or output.exists():
         parser.error(
             "The output directory must be new and its parent must already exist."
         )
+    repo_root = Path(__file__).resolve().parents[1]
+    if any(parent.samefile(repo_root) for parent in output.parents):
+        parser.error("Use an output directory outside the repository.")
 
     try:
         brief = json.loads(args.brief.read_text(encoding="utf-8"))
@@ -175,7 +174,7 @@ def main(argv: Sequence[str] | None = None, *, editor: Editor | None = None) -> 
 
     output.mkdir(mode=0o700)
     private = output / "private.json"
-    ballot_path = output / "ballot.md"
+    ballot_path = output / "ballot.txt"
     try:
         fd = os.open(private, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         with os.fdopen(fd, "w", encoding="utf-8") as file:
