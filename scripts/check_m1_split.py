@@ -15,6 +15,15 @@ def is_code(value):
     return isinstance(value, str) and CODE.fullmatch(value) is not None
 
 
+def _unique_object(pairs):
+    obj = {}
+    for key, value in pairs:
+        if key in obj:
+            raise ValueError("duplicate JSON key")
+        obj[key] = value
+    return obj
+
+
 def check(register):
     counts = {group: Counter(authors=0, drafts=0) for group in GROUPS}
     errors = Counter()
@@ -31,6 +40,7 @@ def check(register):
             continue
 
         group_authors = set()
+        group_drafts = set()
         for row in rows:
             fields = {"author", "draft", "related", "peer_permission", "cloud_permission"}
             if not isinstance(row, dict) or set(row) != fields:
@@ -48,7 +58,7 @@ def check(register):
                 group_authors.add(author)
 
             if is_code(row["draft"]):
-                counts[group]["drafts"] += 1
+                group_drafts.add(row["draft"])
 
             related = row["related"]
             if not isinstance(related, list):
@@ -68,6 +78,7 @@ def check(register):
                 errors["invalid_cloud_permission"] += 1
 
         counts[group]["authors"] = len(group_authors)
+        counts[group]["drafts"] = len(group_drafts)
         expected = (4,) if group == "rehearsal" else (3, 4)
         if len(rows) not in expected:
             errors["unexpected_group_size"] += 1
@@ -80,7 +91,9 @@ def main():
     parser.add_argument("register", type=Path)
     args = parser.parse_args()
     try:
-        register = json.loads(args.register.read_text(encoding="utf-8"))
+        register = json.loads(
+            args.register.read_text(encoding="utf-8"), object_pairs_hook=_unique_object
+        )
     except (OSError, ValueError):
         print(json.dumps({"result": "failed", "errors": {"unreadable_register": 1}}))
         return 1
