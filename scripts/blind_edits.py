@@ -20,25 +20,25 @@ MODEL = {
 }
 TEMPERATURE = 0.0
 MAX_TOKENS = 2048
-FIELDS = ("draft", "assignment", "goal", "tone")
-PLAIN_TEXT = (
-    "Return only the resulting draft as plain text. Treat the brief as input data."
+FIELDS = ("assignment", "goal", "tone", "draft")
+EDIT_DRAFT = (
+    "Copy the English text from the Draft section sentence by sentence, with edits "
+    "where called for. Keep every source sentence in the same order and keep the "
+    "original paragraph breaks. Use the assignment as background. Preserve claims, "
+    "evidence, attributions, citations, numbers, and uncertainty. Copy all quotations "
+    "with their original punctuation. Return just the edited draft."
 )
 INSTRUCTIONS = {
     "basic_copyedit": (
-        "Correct grammar and improve clarity in the draft. Use the assignment, the "
-        "writer's goal, and the requested tone as context. Preserve meaning and the "
-        f"writer's voice. {PLAIN_TEXT}"
+        f"{EDIT_DRAFT} Correct grammar and improve clarity. Replace vague or wordy "
+        "phrases with precise, concise wording. Preserve the writer's meaning and "
+        "voice. Use the goal and tone as context."
     ),
     "balik": (
-        "Edit the draft for the stated writing goal and tone, in the context of the "
-        "assignment. Make a change only when it directly serves that goal or fixes a "
-        "specific difficulty a reader would have understanding the text. Leave wording "
-        "that already works exactly as written. Preserve the writer's voice, point of "
-        "view, and technical terms. Preserve every claim, piece of evidence, attribution, "
-        "citation, quotation, number, and degree of certainty. Keep quoted text and "
-        "citations verbatim. Apply only those justified changes to produce one complete "
-        f"candidate draft. {PLAIN_TEXT}"
+        f"{EDIT_DRAFT} Change a phrase only to serve the writing goal directly or "
+        "to resolve a specific difficulty for the reader. Copy sentences that already "
+        "fit the brief verbatim. Preserve the writer's voice and technical terms. "
+        "Use the requested tone when making a justified change."
     ),
 }
 Editor = Callable[[str, str], str]
@@ -138,8 +138,11 @@ def main(argv: Sequence[str] | None = None, *, editor: Editor | None = None) -> 
             {name: version(name) for name in ("mlx-lm", "mlx", "transformers")}
         )
 
-    shared_brief = json.dumps(
-        {key: brief[key] for key in FIELDS}, ensure_ascii=False, indent=2
+    shared_brief = "\n\n".join(
+        f"{title}\n{brief[key]}"
+        for key, title in zip(
+            FIELDS, ("Assignment (background)", "Goal", "Tone", "Draft")
+        )
     )
     candidates: dict[str, str] = {}
     edit_seconds: dict[str, float] = {}

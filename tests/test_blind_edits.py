@@ -38,7 +38,8 @@ class BlindEditsTest(unittest.TestCase):
 
         self.assertEqual(len(calls), 2)
         self.assertNotEqual(calls[0][0], calls[1][0])
-        self.assertEqual(json.loads(calls[0][1]), self.brief)
+        for value in self.brief.values():
+            self.assertIn(value, calls[0][1])
         self.assertEqual(calls[0][1], calls[1][1])
 
         private_path = self.output / "private.json"
